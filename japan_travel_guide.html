@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Tour - คู่มือท่องเที่ยวประเทศญี่ปุ่น (Japan Travel Guide)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Font - Kanit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        japan: {
+                            red: '#E60012',
+                            pink: '#FFB7C5',
+                            sakura: '#FFE4E8',
+                            indigo: '#1B2A4A',
+                            navy: '#0F172A',
+                            cream: '#FFFBF7',
+                            gold: '#D4AF37'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+        .petal {
+            position: fixed;
+            top: -10px;
+            pointer-events: none;
+            z-index: 50;
+            background-color: #FFB7C5;
+            border-radius: 15px 0px 15px 0px;
+            opacity: 0.7;
+            animation: fall 10s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-japan-pink selection:text-japan-indigo">
+
+    <!-- Floating Sakura Petals -->
+    <div id="sakura-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+
+    <!-- Header & Live JST Bar -->
+    <header class="sticky top-0 z-40 bg-japan-navy text-white shadow-lg border-b border-japan-indigo/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-3 md:py-4 gap-3">
+                <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                    <div class="flex items-center gap-2">
+                        <div class="w-9 h-9 rounded-full bg-japan-red flex items-center justify-center text-white font-bold text-xl shadow-md border-2 border-white/20">
+                            日
+                        </div>
+                        <div>
+                            <span class="text-xs tracking-widest text-japan-pink uppercase font-semibold block">World Tour Platform</span>
+                            <h1 class="text-lg sm:text-xl font-bold text-white tracking-wide flex items-center gap-2">
+                                Japan Travel Guide <span class="text-xs bg-japan-red/80 px-2 py-0.5 rounded text-white font-normal hidden sm:inline-block">คู่มือเที่ยวญี่ปุ่น</span>
+                            </h1>
+                        </div>
+                    </div>
+                    <!-- Mobile Clock -->
+                    <div class="md:hidden text-right bg-slate-800/80 px-2.5 py-1 rounded border border-slate-700">
+                        <div class="text-[10px] text-slate-400">JST (เวลาญี่ปุ่น)</div>
+                        <div id="mobile-jst-clock" class="text-xs font-mono font-bold text-japan-pink">00:00:00</div>
+                    </div>
+                </div>
+
+                <!-- Real-time Weather & JST Clock Bar -->
+                <div class="flex items-center gap-4 bg-slate-800/60 hover:bg-slate-800/90 transition px-4 py-2 rounded-xl border border-slate-700/60 w-full md:w-auto justify-around md:justify-end text-sm">
+                    <div class="flex items-center gap-2 pr-3 border-r border-slate-700">
+                        <i data-lucide="clock" class="w-4 h-4 text-japan-pink animate-pulse"></i>
+                        <div>
+                            <div class="text-[10px] text-slate-400 leading-none">เวลาญี่ปุ่น (JST, UTC+9)</div>
+                            <div id="jst-clock" class="font-mono font-bold text-japan-pink text-base leading-snug">00:00:00</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <div id="header-weather-icon" class="text-amber-400">
+                            <i data-lucide="sun" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div id="header-weather-city" class="text-[10px] text-slate-300 leading-none">สภาพอากาศ (โตเกียว)</div>
+                            <div id="header-weather-temp" class="font-bold text-white text-base leading-snug">18°C <span class="text-xs font-normal text-slate-300">แจ่มใส</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- Hero Section -->
+        <section class="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-r from-japan-indigo via-slate-900 to-japan-navy text-white p-6 sm:p-10">
+            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#FFB7C5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="relative z-10 max-w-3xl space-y-3">
+                <div class="inline-flex items-center gap-1.5 bg-japan-red/20 text-japan-pink border border-japan-pink/30 px-3 py-1 rounded-full text-xs font-medium">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ครอบคลุมสถานที่ท่องเที่ยวแนะนำทุกเมืองทุกย่าน
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    ค้นพบ <span class="text-transparent bg-clip-text bg-gradient-to-r from-japan-pink to-rose-300">สถานที่ท่องเที่ยวเด็ด</span> พร้อมวิธีเดินทางและเวลาเปิด-ปิด
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    เจาะลึก 15 เมืองหลักทั่วประเทศญี่ปุ่น เลือกเมือง เลือกย่าน และกดเลือกสถานที่ท่องเที่ยวที่สนใจ เพื่อดูคำบรรยาย เวลาเปิด-ปิด ค่าเข้าชม และวิธีการเดินทางอย่างละเอียด
+                </p>
+            </div>
+        </section>
+
+        <!-- Search & Region Filters -->
+        <section class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="city-search" placeholder="ค้นหาเมือง ย่าน หรือสถานที่ เช่น SHIBUYA SKY, วัดเซ็นโซจิ, USJ..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-japan-indigo/20 focus:border-japan-indigo transition">
+                </div>
+
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" id="region-filter-container">
+                    <!-- Dynamic region pills -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column: City Cards Grid -->
+            <section class="lg:col-span-5 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                        <i data-lucide="building-2" class="w-5 h-5 text-japan-red"></i>
+                        เลือกเมืองที่สนใจ (<span id="city-count-label">15</span>)
+                    </h3>
+                    <span class="text-xs text-slate-500">คลิกที่เมืองเพื่อดูข้อมูลย่าน</span>
+                </div>
+
+                <div id="city-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 max-h-[720px] overflow-y-auto pr-1">
+                    <!-- City list -->
+                </div>
+            </section>
+
+            <!-- Right Column: City & District Explorer -->
+            <section class="lg:col-span-7 bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden sticky top-20" id="details-section">
+                
+                <!-- City Banner Header -->
+                <div id="city-detail-header" class="relative bg-slate-900 text-white p-6 min-h-[160px] flex flex-col justify-end overflow-hidden transition-all duration-300">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-40 transition-transform duration-700 transform scale-105" id="city-banner-bg"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+                    
+                    <div class="relative z-10 flex flex-col sm:flex-row justify-between sm:items-end gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span id="city-region-badge" class="bg-japan-red text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                    KANTO
+                                </span>
+                                <span id="city-jp-name" class="text-slate-300 text-sm font-medium">東京 (Tokyo)</span>
+                            </div>
+                            <h2 id="city-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                                โตเกียว (Tokyo)
+                            </h2>
+                            <p id="city-description" class="text-xs sm:text-sm text-slate-300 mt-1 line-clamp-2">
+                                เมืองหลวงอันทรงเสน่ห์ที่ผสมผสานความล้ำยุคกับวัฒนธรรมดั้งเดิมได้อย่างลงตัว
+                            </p>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/15 flex items-center gap-3 shrink-0">
+                            <div id="city-weather-icon" class="text-amber-300 text-2xl">
+                                <i data-lucide="sun" class="w-8 h-8"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-300">สภาพอากาศปัจจุบัน</div>
+                                <div id="city-weather-temp" class="text-lg font-bold text-white leading-tight">18°C</div>
+                                <div id="city-weather-cond" class="text-xs text-slate-200">ท้องฟ้าแจ่มใส</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pass Advice Bar -->
+                <div class="bg-indigo-50/80 px-6 py-3 border-b border-indigo-100 flex items-center gap-3 text-xs sm:text-sm text-japan-indigo">
+                    <i data-lucide="credit-card" class="w-5 h-5 text-japan-red shrink-0"></i>
+                    <div>
+                        <span class="font-bold">ตั๋วเดินทางแนะนำในเมืองนี้:</span>
+                        <span id="city-ic-card-tip" class="text-slate-700 ml-1">บัตร Suica / Pasmo หรือ Tokyo Subway Ticket 24/48/72 ชม.</span>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="p-6 space-y-6">
+                    <!-- District Selection Pills -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                                <i data-lucide="map" class="w-4 h-4 text-japan-red"></i>
+                                เลือกย่านท่องเที่ยวในเมืองนี้
+                            </h3>
+                            <span class="text-xs text-slate-500 font-normal">คลิกเลือกย่านเพื่อดูสถานที่ท่องเที่ยว</span>
+                        </div>
+                        
+                        <div id="district-tabs" class="flex flex-wrap gap-2">
+                            <!-- Dynamic District Tabs -->
+                        </div>
+                    </div>
+
+                    <!-- District Details & Interactive Attractions -->
+                    <div id="district-detail-card" class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5 transition-all">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-japan-red text-white flex items-center justify-center font-bold text-xs">日</div>
+                <span class="font-semibold text-slate-200">World Tour Platform - Japan Edition</span>
+            </div>
+            <p>© 2026 World Tour Travel Guide. ข้อมูลสถานที่ท่องเที่ยว เวลาเปิด-ปิด ค่าเข้าชม และวิธีเดินทางแบบสมบูรณ์</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Data & Logic -->
+    <script>
+        // --- JAPAN TRAVEL COMPREHENSIVE DATA (15 CITIES, DISTRICTS, & ATTRACTIONS) ---
+        const japanData = [
+            {
+                id: 'tokyo',
+                nameTH: 'โตเกียว',
+                nameEN: 'Tokyo',
+                nameJP: '東京',
+                region: 'Kanto',
+                regionTH: 'คันโต',
+                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองหลวงอันทรงเสน่ห์ที่ผสมผสานความล้ำยุคกับวัฒนธรรมดั้งเดิมได้อย่างลงตัว แหล่งช้อปปิ้ง แฟชั่น และอาหารระดับโลก',
+                weather: { temp: 18, cond: 'แจ่มใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร Suica / Pasmo หรือตั๋ว Tokyo Subway Ticket (24/48/72 ชั่วโมง)',
+                districts: [
+                    {
+                        id: 'shibuya',
+                        nameTH: 'ชิบูย่า',
+                        nameEN: 'Shibuya',
+                        transportSummary: 'นั่งรถไฟ JR Yamanote Line, Tokyo Metro Ginza Line / Hanzomon Line / Fukutoshin Line ลงสถานี **Shibuya Station**',
+                        food: ['ข้าวหน้าเนื้อ / สเต๊กเนื้อวัวฉ่ำๆ', 'คาเฟ่ของหวานแนวชีสเค้กและชาเขียวมัทฉะ', 'ยากิโทริย่าน Nonbei Yokocho'],
+                        tags: ['แฟชั่นวัยรุ่น', 'ห้าแยกแลนด์มาร์ก', 'จุดชมวิวสูง'],
+                        attractions: [
+                            {
+                                id: 'shibuya-sky',
+                                nameTH: 'จุดชมวิว ชิบูย่า สกาย (SHIBUYA SKY)',
+                                nameEN: 'SHIBUYA SKY',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'จุดชมวิวกลางแจ้งไร้กระจกกั้นบนชั้นดาดฟ้าของตึก Shibuya Scramble Square ความสูง 229 เมตร สามารถชมวิวโตเกียวได้แบบ 360 องศา เห็นทั้งห้าแยกชิบูย่า โตเกียวทาวเวอร์ และภูเขาไฟฟูจิในวันที่ฟ้าโปร่ง',
+                                hours: '10:00 - 22:30 น. (เข้าชมรอบสุดท้าย 21:20 น.)',
+                                fee: 'ผู้ใหญ่ประมาณ 2,200 - 2,500 เยน (แนะนำจองล่วงหน้าออนไลน์ถูกกว่าซื้อหน้างาน)',
+                                access: 'เชื่อมต่อโดยตรงจากสถานี **Shibuya Station** ขึ้นลิฟต์ตรงจากอาคาร Shibuya Scramble Square ชั้น 14 ไปยังจุดจำหน่ายตั๋ว',
+                                bestTime: 'ช่วงเวลา 16:30 - 18:00 น. เพื่อชมช่วงพระอาทิตย์ตกดินเชื่อมต่อไปยังแสงสีไฟเมืองยามค่ำคืน'
+                            },
+                            {
+                                id: 'shibuya-crossing',
+                                nameTH: 'ห้าแยกชิบูย่า (Shibuya Scramble Crossing)',
+                                nameEN: 'Shibuya Scramble Crossing',
+                                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                                description: 'ห้าแยกที่มีผู้คนเดินข้ามมากที่สุดในโลก สัญลักษณ์แห่งความคึกคักของมหานครโตเกียว เมื่อสัญญาณไฟเขียวเปิดพร้อมกัน ผู้คนนับพันจะเดินข้ามประสานกันจากทุกทิศทาง',
+                                hours: 'เปิดตลอด 24 ชั่วโมง (แนะนำช่วงเย็น-ค่ำ แสงสีไฟนีออนสวยที่สุด)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'ออกจากสถานี **Shibuya Station** ทางออก **Hachiko Exit** จะพบห้าแยกอยู่ตรงหน้าทันที',
+                                bestTime: 'ช่วงเวลา 17:00 - 21:00 น. บรรยากาศจอ LED และผู้คนคึกคักที่สุด'
+                            },
+                            {
+                                id: 'hachiko-statue',
+                                nameTH: 'รูปปั้นสุนัขยอดกตัญญู ฮาจิโกะ',
+                                nameEN: 'Hachiko Statue',
+                                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                                description: 'รูปปั้นทองแดงของสุนัขพันธุ์อากิตะชื่อ "ฮาจิโกะ" ผู้เฝ้ารอนายอำเภอหน้าสถานีชิบูย่าทุกวันเป็นเวลาเกือบ 10 ปี ถือเป็นจุดนัดพบยอดฮิตและสัญลักษณ์ความซื่อสัตย์',
+                                hours: 'เปิดตลอด 24 ชั่วโมง',
+                                fee: 'เข้าชมฟรี',
+                                access: 'สถานี **Shibuya Station** ทางออก **Hachiko Exit** รูปปั้นตั้งอยู่ลาน廣場ลานหน้าสถานี',
+                                bestTime: 'ช่วงเช้าตรู่หากต้องการถ่ายรูปคู่โดยไม่ต้องเข้าแถวรอยาว'
+                            },
+                            {
+                                id: 'miyashita-park',
+                                nameTH: 'สวนและศูนย์การค้า มิยาชิตะ พาร์ค (MIYASHITA PARK)',
+                                nameEN: 'Miyashita Park',
+                                image: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=600&q=80',
+                                description: 'สวนสาธารณะลอยฟ้าปรับปรุงใหม่สุดชิค มีลานสเก็ตบอร์ด สนามสตรีทบอล พร้อมศูนย์การค้ารวมแบรนด์แฟชั่น คาเฟ่ และตรอกอาหาร Yokocho สตรีทฟู้ดคึกคัก',
+                                hours: 'สวนลอยฟ้า: 08:00 - 23:00 น. / ร้านค้า: 11:00 - 21:00 น.',
+                                fee: 'เข้าชมสวนฟรี',
+                                access: 'เดิน 3 นาที จากสถานี **Shibuya Station** (ทางออก B1 หรือ Miyashita Park Exit)',
+                                bestTime: 'ช่วงบ่ายนั่งจิบกาแฟ หรือช่วงค่ำทานอาหารสไตล์อิซากายะชั้นล่าง'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'shinjuku',
+                        nameTH: 'ชินจูกุ',
+                        nameEN: 'Shinjuku',
+                        transportSummary: 'นั่งรถไฟ JR Yamanote / Chuo Line หรือ Tokyo Subway Marunouchi Line ลงสถานี **Shinjuku Station**',
+                        food: ['ราเมงกระดูกหมูเข้มข้น Ichiran / Fuunji Tsukemen', 'ยากิโทริย่างเตาถ่านตรอก Omoide Yokocho', 'เนื้อย่างGyukatsu'],
+                        tags: ['ช้อปปิ้ง', 'แสงสี night-life', 'จุดชมวิวฟรี', 'สวนสาธารณะ'],
+                        attractions: [
+                            {
+                                id: 'shinjuku-gyoen',
+                                nameTH: 'สวนสาธารณะ ชินจูกุ เกียวเอ็น',
+                                nameEN: 'Shinjuku Gyoen National Garden',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'สวนสาธารณะขนาดใหญ่ใจกลางเมือง ผสมผสานจัดสวน 3 รูปแบบ ได้แก่ สวนฝรั่งเศส สวนอังกฤษ และสวนญี่ปุ่นโบราณ เป็นจุดชมดอกซากุระและใบไม้เปลี่ยนสีที่สวยงามที่สุดแห่งหนึ่งในโตเกียว',
+                                hours: '09:00 - 16:30 น. (ปิดวันจันทร์ ยกเว้นช่วงฤดูซากุระ)',
+                                fee: 'ผู้ใหญ่ 500 เยน / นักเรียน 250 เยน / เด็กฟรี',
+                                access: 'เดิน 5 นาที จากสถานี **Shinjuku-gyoemmae Station** (Exit 1) หรือเดิน 10 นาที จากสถานี **JR Shinjuku Station** (South Exit)',
+                                bestTime: 'ฤดูใบไม้ร่วง (พ.ย.-ธ.ค.) ชมใบโมมิจิสีแดง และฤดูใบไม้ผลิ (ปลาย มี.ค.-เม.ย.) ชมซากุระ'
+                            },
+                            {
+                                id: 'tmg-view',
+                                nameTH: 'จุดชมวิวตึกศาลาว่าการกรุงโตเกียว (TMG Observatory)',
+                                nameEN: 'Tokyo Metropolitan Government Building',
+                                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                                description: 'จุดชมวิวเมืองโตเกียวความสูง 202 เมตรบนชั้น 45 เปิดให้เข้าชมฟรีโดยไม่มีค่าใช้จ่าย มีเปียโนลายจุดทองคำให้นักท่องเที่ยวเล่นเพลง และร้านขายของเปียโนดนตรี',
+                                hours: '09:30 - 22:00 น. (ปิดวันอังคารที่ 1 และ 3 ของเดือน)',
+                                fee: 'เข้าชมฟรี!',
+                                access: 'เดิน 10 นาที จากสถานี **JR Shinjuku Station** (West Exit) หรือเชื่อมต่อโดยตรงจากสถานี **Tochomae Station** (Toei Oedo Line)',
+                                bestTime: 'ช่วงพลบค่ำชมแสงไฟระยิบระยับของมหานครโตเกียวแบบประหยัดงบ'
+                            },
+                            {
+                                id: 'omoide-yokocho',
+                                nameTH: 'ตรอกตรอกแห่งความทรงจำ โอโมอิเดะ โยโคโจ',
+                                nameEN: 'Omoide Yokocho',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'ตรอกเล็กๆ ย้อนยุคสมัยโชวะ เต็มไปด้วยร้านยากิโทริ (ไก่ย่างเสียบไม้) โอเด้ง และเหล้าสาเก ขนาดเล็กรวมกันกว่า 80 ร้าน ได้บรรยากาศญี่ปุ่นแบบดั้งเดิมแท้ๆ',
+                                hours: 'ประมาณ 17:00 - 24:00 น. (แต่ละร้านแตกต่างกัน)',
+                                fee: 'เข้าชมฟรี (จ่ายตามค่าอาหารและเครื่องดื่ม)',
+                                access: 'เดิน 3 นาที จากสถานี **JR Shinjuku Station** (West Exit)',
+                                bestTime: 'ช่วงหลัง 18:00 น. บรรยากาศโคมไฟสีแดงสว่างไสวคึกคักมาก'
+                            },
+                            {
+                                id: 'kabukicho-tower',
+                                nameTH: 'อาคาร คาบูกิโจ ทาวเวอร์ (Tokyu Kabukicho Tower)',
+                                nameEN: 'Tokyu Kabukicho Tower',
+                                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                                description: 'ตึกระฟ้าคอมเพล็กซ์แห่งใหม่ใจกลางย่านบันเทิงคาบูกิโจ รวมความบันเทิง โรงภาพยนตร์ ฮอลล์คอนเสิร์ต เกมเซ็นเตอร์ไซเบอร์พังค์ และศูนย์รวมสตรีทฟู้ด Kabuki Hall ป้ายไฟนีออนสุดอลังการ',
+                                hours: 'ส่วนศูนย์อาหารและเกมเปิด 10:00 - 05:00 น. (เปิดเกือบตลอดคืน)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 5 นาที จากสถานี **JR Shinjuku Station** (East Exit)',
+                                bestTime: 'ช่วงค่ำสำหรับถ่ายรูปไฟนีออนและทานอาหารสไตล์สตรีทฟู้ด'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'asakusa',
+                        nameTH: 'อาซากุสะ',
+                        nameEN: 'Asakusa',
+                        transportSummary: 'นั่งรถไฟใต้ดิน Tokyo Metro Ginza Line หรือ Toei Asakusa Line ลงสถานี **Asakusa Station**',
+                        food: ['ขนมเซมเบ้กรอบย่างสด', 'เมเปิ้ลขนมปังเมล่อน', 'ซอฟต์ครีมชาเขียวเข้มข้นระดับ 7'],
+                        tags: ['วัฒนธรรม', 'วัดโบราณ', 'หอคอย', 'ขนมพื้นเมือง'],
+                        attractions: [
+                            {
+                                id: 'sensoji-temple',
+                                nameTH: 'วัดเซ็นโซจิ / วัดโคมแดง (Sensoji Temple)',
+                                nameEN: 'Sensoji Temple',
+                                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=600&q=80',
+                                description: 'วัดพุทธที่เก่าแก่ที่สุดในโตเกียว สร้างขึ้นตั้งแต่ปี ค.ศ. 628 โดดเด่นด้วยประตูคามินาริมง (Kaminarimon Gate) ที่มีโคมแดงยักษ์น้ำหนักกว่า 700 กิโลกรัม ผู้คนนิยมมากราบไหว้เจ้าแม่กวนอิมและกวักควันธูปเข้าหาตัวเพื่อความเป็นสิริมงคล',
+                                hours: 'วิหารหลัก: 06:00 - 17:00 น. (บริเวณวัดเปิด 24 ชม.)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 3 นาที จากสถานี **Asakusa Station** (Tokyo Metro Ginza Line Exit 1 หรือ Tobu Asakusa Line)',
+                                bestTime: 'ช่วงเช้าตรู่ 07:00-08:30 น. ก่อนคนแน่น หรือช่วงค่ำที่เปิดไฟประดับไลท์อัพศาลาและเจดีย์ 5 ชั้น'
+                            },
+                            {
+                                id: 'nakamise-street',
+                                nameTH: 'ถนนช้อปปิ้ง นากามิเสะ (Nakamise Shopping Street)',
+                                nameEN: 'Nakamise Shopping Street',
+                                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                                description: 'ถนนคนเดินปูด้วยหินยาวกว่า 250 เมตร นำทางจากประตูโคมแดงสู่ตัววิหารวัด เต็มไปด้วยร้านค้าโบราณกว่า 80 ร้าน จำหน่ายของฝาก พัดญี่ปุ่น ชุดยูกาตะ และขนมโบราณย่างสดๆ',
+                                hours: 'ประมาณ 09:00 - 18:00 น. (แต่ละร้านแตกต่างกัน)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'ตั้งอยู่บริเวณทางเข้าวัดเซ็นโซจิ ทันทีที่ผ่านประตู Kaminarimon Gate',
+                                bestTime: 'ช่วงสาย 10:00 - 14:00 น. ร้านค้าเปิดครบถ้วน ลิ้มลองขนมอาเกะมันจูทอดสดๆ'
+                            },
+                            {
+                                id: 'tokyo-skytree',
+                                nameTH: 'หอคอย โตเกียวสกายทรี (Tokyo Skytree)',
+                                nameEN: 'Tokyo Skytree',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'สิ่งก่อสร้างที่สูงที่สุดในประเทศญี่ปุ่นด้วยความสูง 634 เมตร มีจุดชมวิว Tembo Deck (350 เมตร) และ Tembo Galleria (450 เมตร) พร้อมศูนย์การค้าห้างใหญ่ Solamachi ที่มีร้านค้ากว่า 300 ร้าน',
+                                hours: '10:00 - 21:00 น. (เข้าชมรอบสุดท้าย 20:00 น.)',
+                                fee: 'จุดชมวิวชั้น 350m ประมาณ 2,100 - 2,700 เยน (แพ็กเกจควบสองชั้นประมาณ 3,100 เยน)',
+                                access: 'นั่งรถไฟ Tobu Skytree Line ลงสถานี **Tokyo Skytree Station** หรือเดินจากวัดเซ็นโซจิผ่านสะพาน Sumida River Walk ประมาณ 15 นาที',
+                                bestTime: 'ช่วงเย็นเพื่อชมอาทิตย์ตกและแสงไฟเมืองยามค่ำคืน'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'harajuku',
+                        nameTH: 'ฮาราจูกุ',
+                        nameEN: 'Harajuku',
+                        transportSummary: 'นั่งรถไฟ JR Yamanote Line ลงสถานี **Harajuku Station** หรือ Tokyo Metro Chiyoda Line / Fukutoshin Line ลงสถานี **Meijijingu-mae Station**',
+                        food: ['เครปญี่ปุ่นแป้งนุ่มสด', 'แพนเค้กซูเฟล่เด้งดึ๋ง', 'ชานมไข่มุกและชาคราฟต์'],
+                        tags: ['ศาลเจ้า', 'แฟชั่นสตรีท', 'เครป', 'ธรรมชาติ'],
+                        attractions: [
+                            {
+                                id: 'meiji-jingu',
+                                nameTH: 'ศาลเจ้าเมจิ (Meiji Jingu Shrine)',
+                                nameEN: 'Meiji Jingu Shrine',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'ศาลเจ้าชินโตขนาดใหญ่สร้างขึ้นเพื่ออุทิศถวายแด่จักรพรรดิเมจิและจักรพรรดินีโชเคน ตั้งอยู่ท่ามกลางผืนป่าธรรมชาติอันเงียบสงบกว่า 100,000 ต้น ใจกลางเมืองหลวงอันวุ่นวาย',
+                                hours: 'เปิดตั้งแต่พระอาทิตย์ขึ้น ถึง พระอาทิตย์ตก (ประมาณ 05:00 - 18:00 น. ตามฤดูกาล)',
+                                fee: 'เข้าชมฟรี (ส่วนพิพิธภัณฑ์ศาลเจ้ามีค่าเข้า 1,000 เยน)',
+                                access: 'เดิน 1 นาที จากสถานี **JR Harajuku Station** (Omotesando Exit) ผ่านเสาโทริอิไม้ขนาดใหญ่เข้าสู่ทางเดินป่า',
+                                bestTime: 'ช่วงเช้า 07:00 - 09:00 น. บรรยากาศเงียบสงบ อากาศสดชื่นและมีพิธีให้พรจากมิโกะ'
+                            },
+                            {
+                                id: 'takeshita-street',
+                                nameTH: 'ถนนแฟชั่น ทาเคชิตะ (Takeshita Street)',
+                                nameEN: 'Takeshita Street',
+                                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                                description: 'ถนนคนเดินความยาว 350 เมตร ศูนย์กลางวัฒนธรรมแฟชั่นวัยรุ่นโตเกียว คอสเพลย์ ร้านเสื้อผ้าราคาประหยัด ร้านสินค้าคาวาอี้ และร้านเครปสตรีทฟู้ดชื่อดัง',
+                                hours: 'ประมาณ 10:00 - 20:00 น.',
+                                fee: 'เข้าชมฟรี',
+                                access: 'ตั้งอยู่ตรงข้ามสถานี **JR Harajuku Station** ทางออก Takeshita Exit',
+                                bestTime: 'ช่วงบ่ายวันเสาร์-อาทิตย์ สำหรับผู้ที่ต้องการสัมผัสความคึกคักแฟชั่นคอสเพลย์วัยรุ่น'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'akihabara',
+                        nameTH: 'อากิฮาบาระ',
+                        nameEN: 'Akihabara',
+                        transportSummary: 'นั่งรถไฟ JR Yamanote / Keihin-Tohoku Line หรือ Tokyo Metro Hibiya Line ลงสถานี **Akihabara Station**',
+                        food: ['ข้าวแกงกะหรี่สไตล์ญี่ปุ่น Go Go Curry', 'เนื้อย่าง Gyukatsu', 'เมดคาเฟ่อาหารธีมการ์ตูน'],
+                        tags: ['อนิเมะ', 'เกม', 'เครื่องใช้ไฟฟ้า', 'ฟิกเกอร์'],
+                        attractions: [
+                            {
+                                id: 'radio-kaikan',
+                                nameTH: 'ตึกอากิฮาบาระ เรดิโอ ไคคัง (Akihabara Radio Kaikan)',
+                                nameEN: 'Akihabara Radio Kaikan',
+                                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                                description: 'ตึกแลนด์มาร์กสูง 10 ชั้น แหล่งรวมร้านค้าอนิเมะ ฟิกเกอร์การ์ตูน การ์ดเกมสะสม อุปกรณ์อิเล็กทรอนิกส์ และโมเดลจำลองที่ครบครันที่สุดแห่งหนึ่งในโลก',
+                                hours: '10:00 - 20:00 น.',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 1 นาที จากสถานี **JR Akihabara Station** (Electric Town South Exit)',
+                                bestTime: 'ช่วงบ่ายสำหรับนักสะสมเดินเลือกชมโมเดลหายาก'
+                            },
+                            {
+                                id: 'kanda-myojin',
+                                nameTH: 'ศาลเจ้าคันดะ เมียวจิน (Kanda Myojin Shrine)',
+                                nameEN: 'Kanda Myojin Shrine',
+                                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=600&q=80',
+                                description: 'ศาลเจ้าเก่าแก่อายุมากกว่า 1,300 ปี มีชื่อเสียงเรื่องการให้พรด้านโชคลาภ ธุรกิจการค้า และความปลอดภัยทางเทคโนโลยีไอที รวมถึงเป็นฉากสำคัญในอนิเมะเรื่อง Love Live!',
+                                hours: 'เปิดตลอด 24 ชั่วโมง (อาคารจำหน่ายวัตถุมงคลเปิด 09:00 - 17:00 น.)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 5 นาที จากสถานี **JR Ochanomizu Station** หรือเดิน 7 นาที จาก **Akihabara Station**',
+                                bestTime: 'กราบไหว้ขอพรเครื่องราง IT / ธุรกิจการค้า และรับสติ๊กเกอร์เครื่องรางคอมพิวเตอร์'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'ikebukuro',
+                        nameTH: 'อิเคบุคุโระ',
+                        nameEN: 'Ikebukuro',
+                        transportSummary: 'นั่งรถไฟ JR Yamanote Line, Saikyo Line หรือ Tokyo Metro (Marunouchi, Yurakucho, Fukutoshin Line) ลงสถานี **Ikebukuro Station**',
+                        food: ['ราเมงเข้มข้นสายโชยุ/สึเคเมน Mutekiya Ramen', 'คาเฟ่อนิเมะคอลแลบส์', 'พาร์เฟต์ผลไม้'],
+                        tags: ['อนิเมะ', 'ช้อปปิ้ง', 'พกมอน', 'Sunshine City'],
+                        attractions: [
+                            {
+                                id: 'sunshine-city',
+                                nameTH: 'ศูนย์การค้า ซันไชน์ ซิตี้ (Sunshine City)',
+                                nameEN: 'Sunshine City',
+                                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                                description: 'อภิมหาอาคารคอมเพล็กซ์ที่มีทั้งพิพิธภัณฑ์สัตว์น้ำลอยฟ้า (Sunshine Aquarium), จุดชมวิว Sunshine 60 Observatory Tenbou-Park, ท้องฟ้าจำลอง และศูนย์การค้าขนาดใหญ่',
+                                hours: 'ศูนย์การค้า: 10:00 - 20:00 น. / พิพิธภัณฑ์สัตว์น้ำ: 09:30 - 21:00 น.',
+                                fee: 'เข้าศูนย์การค้าฟรี (พิพิธภัณฑ์สัตว์น้ำประมาณ 2,600 เยน / จุดชมวิวประมาณ 1,200 เยน)',
+                                access: 'เดิน 8 นาที จากสถานี **JR Ikebukuro Station** (East Exit) หรือเดิน 3 นาที จาก **Higashi-Ikebukuro Station**',
+                                bestTime: 'เหมาะสำหรับเที่ยวตลอดวัน โดยเฉพาะวันฝนตกหรือมาเป็นครอบครัว'
+                            },
+                            {
+                                id: 'pokemon-center-mega',
+                                nameTH: 'โปเกมอน เซ็นเตอร์ เมกะ โตเกียว (Pokémon Center Mega Tokyo)',
+                                nameEN: 'Pokémon Center Mega Tokyo',
+                                image: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=600&q=80',
+                                description: 'ร้านโปเกมอนเซ็นเตอร์ที่ใหญ่ที่สุดในญี่ปุ่น ตั้งอยู่ชั้น 2F ของ Sunshine City ตกแต่งด้วยรูปปั้นลิซาร์ดอนยักษ์ สินค้าลิขสิทธิ์แท้ ตุ๊กตา การ์ดเกม และตู้เกม Pokémon Ga-Olé',
+                                hours: '10:00 - 20:00 น.',
+                                fee: 'เข้าชมฟรี',
+                                access: 'ตั้งอยู่ชั้น 2F อาคาร Sunshine City Alpa เดินจากสถานี Ikebukuro ประมาณ 8 นาที',
+                                bestTime: 'ช่วงเช้าวันธรรมดา เพื่อหลีกเลี่ยงคิวการ์ดเกมและชำระเงินที่ยาวเหยียด'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'nakameguro',
+                        nameTH: 'นากาเมกุโระ',
+                        nameEN: 'Nakameguro',
+                        transportSummary: 'นั่งรถไฟ Tokyu Toyoko Line หรือ Tokyo Metro Hibiya Line ลงสถานี **Naka-meguro Station**',
+                        food: ['กาแฟสเปเชียลตี้ดิฟฟ์สด', 'เค้กเบเกอรี่โฮมเมด', 'ร้านยากิโทริและอิซากายะสุดชิคริมคลอง'],
+                        tags: ['ชมซากุระ', 'สตาร์บัคส์โรสเตอรี่', 'คาเฟ่', 'ริมคลอง'],
+                        attractions: [
+                            {
+                                id: 'meguro-river',
+                                nameTH: 'ทางเดินริมคลองเมกุโระ (Meguro River Promenade)',
+                                nameEN: 'Meguro River',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'สายน้ำและทางเดินริมคลองที่โอบล้อมด้วยต้นซากุระกว่า 800 ต้น เรียงรายยาวกว่า 3 กิโลเมตร ถือเป็นจุดชมดอกซากุระยามค่ำคืน (Yozakura) ที่โรแมนติกที่สุดแห่งหนึ่งในโตเกียว',
+                                hours: 'เปิดตลอด 24 ชั่วโมง (ช่วงเทศกาลซากุระเปิดไฟประดับไลท์อัพถึง 21:00 น.)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 1 นาที จากสถานี **Naka-meguro Station** ออกมาจะพบลำคลองทันที',
+                                bestTime: 'ปลายเดือนมีนาคม - ต้นเดือนเมษายน (ช่วงซากุระบานสะพรั่ง)'
+                            },
+                            {
+                                id: 'starbucks-roastery-tokyo',
+                                nameTH: 'สตาร์บัคส์ รีเสิร์ฟ โรลสเตอรี่ โตเกียว (Starbucks Reserve Roastery)',
+                                nameEN: 'Starbucks Reserve Roastery Tokyo',
+                                image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80',
+                                description: 'สาขาเครื่องคั่วกาแฟระดับแฟลกชิปสูง 4 ชั้น ตกแต่งอย่างตระการตาด้วยถังคั่วกาแฟทองแดงขนาดใหญ่ ออกแบบโดยสถาปนิกชื่อดัง Kengo Kuma มีบาร์ค็อกเทล เบเกอรี่ Princi และระเบียงชมวิวริมคลอง',
+                                hours: '07:00 - 22:00 น.',
+                                fee: 'เข้าชมฟรี (กดคิวรับบัตรคิวเข้าอาคารที่ตู้ข้างอาคารในช่วงวันหยุด)',
+                                access: 'เดิน 10 นาที จากสถานี **Naka-meguro Station** ทางเดินริมคลองเมกุโระ',
+                                bestTime: 'ช่วงเช้าตรู่ 07:00 - 08:30 น. เพื่อหลีกเลี่ยงคิวนาน'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'odaiba',
+                        nameTH: 'โอไดบะ & โทโยสุ',
+                        nameEN: 'Odaiba & Toyosu',
+                        transportSummary: 'นั่งรถไฟโมโนเรล Yurikamome Line จาก Shimbashi หรือนั่งรถไฟใต้ดิน Rinkai Line ลงสถานี **Daiba** หรือ **Tokyo Teleport**',
+                        food: ['อาหารทะเลสดใหม่ตลาดโทโยสุ', 'ราเมงสตรีทในห้าง Aqua City', 'บุฟเฟต์ปิ้งย่างริมทะเล'],
+                        tags: ['ทีมแล็บ', 'กันดั้ม', 'วิวทะเล', 'สะพานเรนโบว์'],
+                        attractions: [
+                            {
+                                id: 'teamlab-planets',
+                                nameTH: 'พิพิธภัณฑ์ศิลปะดิจิทัล ทีมแล็บ แพลนเน็ตส์ (teamLab Planets TOKYO)',
+                                nameEN: 'teamLab Planets TOKYO',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'พิพิธภัณฑ์ศิลปะดิจิทัลอินเทอร์แอคทีฟระดับโลกแบบถอดรองเท้าเดินลุยน้ำ ถ่ายรูปคู่กับเขาวงกตกระจก ดอกไม้ดิจิทัลลอยฟ้า และปลาคาร์ฟแสงสีตระการตา',
+                                hours: '09:00 - 22:00 น. (จองรอบตั๋วออนไลน์ล่วงหน้าเท่านั้น)',
+                                fee: 'ผู้ใหญ่ประมาณ 3,800 - 4,200 เยน (ขึ้นอยู่กับวันเข้าชม)',
+                                access: 'เดิน 1 นาที จากสถานี **Shin-Toyosu Station** (Yurikamome Line)',
+                                bestTime: 'จองรอบเช้าสุด 09:00 น. หรือรอบค่ำหลัง 19:00 น. เพื่อความเป็นส่วนตัว'
+                            },
+                            {
+                                id: 'unicorn-gundam',
+                                nameTH: 'หุ่นยนต์กันดั้มยักษ์ (Life-Sized Unicorn Gundam Statue)',
+                                nameEN: 'Unicorn Gundam Statue',
+                                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                                description: 'หุ่นยนต์กันดั้มขนาดเท่าของจริงความสูง 19.7 เมตร ตั้งอยู่หน้าศูนย์การค้า DiverCity Tokyo Plaza สามารถแปลงร่างจาก Unicorn Mode เป็น Destroy Mode พร้อมการแสดงแสงสีเสียงยามค่ำคืน',
+                                hours: 'จัดแสดงตลอดวัน / รอบแปลงร่างไฟไลท์อัพยามค่ำคืนทุกๆ 30 นาที (19:00 - 21:30 น.)',
+                                fee: 'ชมฟรี',
+                                access: 'เดิน 5 นาที จากสถานี **Tokyo Teleport Station** (Rinkai Line) หรือสถานี **Daiba Station** (Yurikamome Line)',
+                                bestTime: 'ช่วงเวลา 19:00 น. เป็นต้นไป เพื่อชมการแปลงร่างพร้อมภาพวิดีโออนิเมชั่นบนฉากตึก'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'osaka',
+                nameTH: 'โอซาก้า',
+                nameEN: 'Osaka',
+                nameJP: '大阪',
+                region: 'Kansai',
+                regionTH: 'คันไซ',
+                image: 'https://images.unsplash.com/photo-1590559899731-a382839e5549?auto=format&fit=crop&w=600&q=80',
+                description: 'ครัวของญี่ปุ่น ขึ้นชื่อเรื่องอาหารสตรีทฟู้ดสุดอร่อย ผู้คนเป็นกันเอง สีสันยามค่ำคืน และสวนสนุกระดับโลก',
+                weather: { temp: 20, cond: 'มีเมฆบางส่วน', icon: 'cloud-sun' },
+                icCardTip: 'ใช้บัตร ICOCA หรือตั๋ว Osaka Amazing Pass สำหรับเข้าสถานที่เที่ยวฟรีรวมค่าเดินทาง',
+                districts: [
+                    {
+                        id: 'dotonbori',
+                        nameTH: 'โดทงโบริ',
+                        nameEN: 'Dotonbori',
+                        transportSummary: 'นั่งรถไฟใต้ดิน Osaka Metro Line (Midosuji Line) ลงสถานี **Namba Station** ออกทางออก 14 แล้วเดิน 3 นาที',
+                        food: ['ทาโกะยากิกรอบนอกนุ่มใน', 'โอโคโนมิยากิ (พิซซ่าญี่ปุ่น)', 'คุชิคาซึ (ของทอดเสียบไม้)'],
+                        tags: ['สตรีทฟู้ด', 'ถ่ายรูปป้ายกูลิโกะ', 'ไนท์ไลฟ์', 'ล่องเรือ'],
+                        attractions: [
+                            {
+                                id: 'glico-sign',
+                                nameTH: 'ป้ายกูลิโกะแมน (Glico Running Man Sign)',
+                                nameEN: 'Glico Running Man Sign',
+                                image: 'https://images.unsplash.com/photo-1590559899731-a382839e5549?auto=format&fit=crop&w=600&q=80',
+                                description: 'ป้ายไฟนีออนยักษ์รูปนักวิ่งกูลิโกะริมคลองโดทงโบริที่ติดตั้งมาตั้งแต่ปี ค.ศ. 1935 ถือเป็นจุดเช็กอินถ่ายรูปท่าชูสองมือยอดฮิตอันดับหนึ่งของนักท่องเที่ยวทั่วโลก',
+                                hours: 'เปิดไฟประดับตั้งแต่พระอาทิตย์ตกดิน ถึง 24:00 น.',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 3 นาที จากสถานี **Namba Station** บนสะพาน Ebisubashi Bridge',
+                                bestTime: 'ช่วงค่ำ 18:30 - 21:00 น. ไฟนีออนสีสันสดใสสะท้อนผิวน้ำคลองสวยงามมาก'
+                            },
+                            {
+                                id: 'dotonbori-cruise',
+                                nameTH: 'เรือท่องเที่ยวคลองโดทงโบริ (Tombori River Cruise)',
+                                nameEN: 'Tombori River Cruise',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'นั่งเรือนำเที่ยวแบบเปิดประทุนล่องชมบรรยากาศสองฝั่งคลองโดทงโบริความยาว 20 นาที พร้อมมัคคุเทศก์ท้องถิ่นบรรยายความสนุกสนานและจุดถ่ายรูปมุมมหาชนใต้สะพาน',
+                                hours: '11:00 - 21:00 น. (ออกเรือทุกๆ 30 นาที)',
+                                fee: 'ผู้ใหญ่ 1,200 เยน (เข้าชมฟรีด้วยบัตร Osaka Amazing Pass)',
+                                access: 'ขึ้นเรือที่ท่าเรือ Don Quijote Dotonbori หน้าเทียบเรือร้านดองกี้',
+                                bestTime: 'ช่วงค่ำเพื่อรับลมเย็นและถ่ายภาพป้ายไฟกูลิโกะจากกลางลำน้ำ'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'umeda',
+                        nameTH: 'อุเมดะ',
+                        nameEN: 'Umeda',
+                        transportSummary: 'นั่งรถไฟ JR ลงสถานี **Osaka Station** หรือรถไฟใต้ดิน Midosuji Line ลงสถานี **Umeda Station**',
+                        food: ['ราเมงน้ำซุปกระดูกไก่เข้มข้น', 'บุฟเฟต์ชาบูเนื้อวากิว', 'เบเกอรี่ระดับพรีเมียม'],
+                        tags: ['ช้อปปิ้งห้างใหญ่', 'ตึกสูง', 'จุดชมวิว', 'ชิงช้าสวรรค์'],
+                        attractions: [
+                            {
+                                id: 'umeda-sky-building',
+                                nameTH: 'อาคาร อุเมดะ สกาย (Umeda Sky Building Floating Garden)',
+                                nameEN: 'Umeda Sky Building',
+                                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                                description: 'อาคารแฝดระฟ้าสถาปัตยกรรมล้ำยุค เชื่อมต่อกันที่ชั้น 39-40 ด้วยสวนลอยฟ้าวงกลมกลางแจ้ง (Kuchu Teien Observatory) สูง 173 เมตร ชมวิวพาโนรามาและทางเดินเรืองแสงยามค่ำคืน',
+                                hours: '09:30 - 22:30 น. (เข้าชมรอบสุดท้าย 22:00 น.)',
+                                fee: 'ผู้ใหญ่ 1,500 เยน (เข้าชมฟรีด้วย Osaka Amazing Pass ก่อน 16:00 น.)',
+                                access: 'เดิน 10 นาที จากสถานี **JR Osaka Station** (Grand Front Osaka Exit)',
+                                bestTime: 'ช่วงเวลา 17:30 - 19:00 น. ชมวิวทิวทัศน์พระอาทิตย์ตกริมแม่น้ำโยโดกาว่า'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'usj-area',
+                        nameTH: 'ยูนิเวอร์แซล ยูนิค (USJ)',
+                        nameEN: 'Universal Studios Japan Area',
+                        transportSummary: 'นั่งรถไฟสาย JR Yumesaki Line (JR Sakurajima Line) ลงสถานี **Universal-City Station** เดินต่อ 3 นาที',
+                        food: ['นมอัลมอนด์ Butterbeer', 'ซาลาเปามาริโอ้ & คิโนพิโอ', 'น่องไก่งวงย่าง'],
+                        tags: ['สวนสนุก', 'มินเนี่ยน', 'มาริโอ้', 'แฮร์รี่พอตเตอร์'],
+                        attractions: [
+                            {
+                                id: 'usj-park',
+                                nameTH: 'สวนสนุก ยูนิเวอร์แซล สตูดิโอส์ เจแปน (USJ)',
+                                nameEN: 'Universal Studios Japan',
+                                image: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=600&q=80',
+                                description: 'สวนสนุกระดับโลกที่มีโซนไฮไลต์ดึงดูดนักท่องเที่ยวทั่วโลก เช่น Super Nintendo World (ปราสาทคุปป้าและเครื่องเล่นมาริโอ้คาร์ท) และ The Wizarding World of Harry Potter',
+                                hours: '08:30 - 21:30 น. (เวลาเปลี่ยนแปลงตามฤดูกาล)',
+                                fee: 'บัตร 1 วันประมาณ 8,600 - 10,400 เยน (ขึ้นอยู่กับวันที่เข้าชม)',
+                                access: 'ลงสถานี **JR Universal-City Station** เดินผ่านถนนช้อปปิ้ง Universal Citywalk เข้าสู่ประตูสวนสนุก',
+                                bestTime: 'เดินทางมาถึงก่อนเวลาสวนสนุกเปิด 45 นาที และใช้แอปพลิเคชัน USJ จองกดคิวเข้าโซน Super Nintendo World'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'kyoto',
+                nameTH: 'เกียวโต',
+                nameEN: 'Kyoto',
+                nameJP: '京都',
+                region: 'Kansai',
+                regionTH: 'คันไซ',
+                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองหลวงเก่าอันเปี่ยมเสน่ห์ วัดโบราณ ศาลเจ้าเสาโทริอิสีแดง สวนหินคลาสสิก และวัฒนธรรมเกอิชา',
+                weather: { temp: 17, cond: 'หมอกบางๆ', icon: 'cloud-fog' },
+                icCardTip: 'ใช้บัตร Kansai Thru Pass หรือรถบัส Kyoto City Bus Pass',
+                districts: [
+                    {
+                        id: 'arashiyama',
+                        nameTH: 'อาราชิยาม่า',
+                        nameEN: 'Arashiyama',
+                        transportSummary: 'นั่งรถไฟ JR San-in Line (Sagano Line) จากสถานี Kyoto ไปลงสถานี **JR Saga-Arashiyama Station** (15 นาที)',
+                        food: ['เต้าหู้สดเกียวโต Yudofu', 'กาแฟดริป % Arabica สาขาติดแม่น้ำ', 'ดังโงะย่างซอส'],
+                        tags: ['ธรรมชาติ', 'ป่าไผ่', 'วิวสะพาน', 'วัดมรดกโลก'],
+                        attractions: [
+                            {
+                                id: 'bamboo-grove',
+                                nameTH: 'ป่าไผ่อาราชิยาม่า (Arashiyama Bamboo Grove)',
+                                nameEN: 'Arashiyama Bamboo Grove',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'เส้นทางเดินเท้าสายธรรมชาติที่ถูกห้อมล้อมด้วยต้นไผ่สูงตระหง่านสองข้างทาง ทอดยาวกว่าหลายร้อยเมตร เสียงลมพัดใบไผ่กระทบกันได้รับการยกย่องเป็น 1 ใน 100 เสียงอนุรักษ์ของญี่ปุ่น',
+                                hours: 'เปิดตลอด 24 ชั่วโมง',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 10 นาที จากสถานี **JR Saga-Arashiyama Station** หรือเดิน 5 นาที จากสถานี **Randen Arashiyama Station**',
+                                bestTime: 'ช่วงเช้าตรู่ก่อน 08:00 น. เพื่อสัมผัสบรรยากาศสงบไร้ผู้คนและถ่ายภาพแสงแดดส่องผ่านลำไผ่'
+                            },
+                            {
+                                id: 'togetsukyo-bridge',
+                                nameTH: 'สะพานโทเก็ตสึเคียว (Togetsukyo Bridge)',
+                                nameEN: 'Togetsukyo Bridge',
+                                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=600&q=80',
+                                description: 'สะพานไม้โบราณความยาว 155 เมตร ทอดข้ามแม่น้ำคัตสึระ มีฉากหลังเป็นทิวเขาอาราชิยาม่าที่จะเปลี่ยนสีสันอย่างงดงามตระการตาตามฤดูกาล โดยเฉพาะช่วงซากุระและใบไม้เปลี่ยนสี',
+                                hours: 'เปิดตลอด 24 ชั่วโมง',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 5 นาที จากสถานี **Randen Arashiyama Station** หรือ 12 นาที จาก **JR Saga-Arashiyama Station**',
+                                bestTime: 'ช่วงเช้าหรือช่วงบ่ายพร้อมจิบกาแฟ % Arabica ริมแม่น้ำ'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'fushimi-gion',
+                        nameTH: 'ฟูชิมิ & ฮิกาชิยาม่า',
+                        nameEN: 'Fushimi & Higashiyama',
+                        transportSummary: 'นั่งรถไฟ Keihan Main Line ลงสถานี **Fushimi-Inari** หรือ **Gion-Shijo Station**',
+                        food: ['ข้าวหน้าปลาไหลย่างซีอิ๊ว', 'บะหมี่ Kitsune Udon', 'ขนมยัตสึฮาชิ'],
+                        tags: ['เสาโทริอิ', 'วัดน้ำใส', 'เกอิชา', 'ถ่ายรูป'],
+                        attractions: [
+                            {
+                                id: 'fushimi-inari',
+                                nameTH: 'ศาลเจ้าฟูชิมิ อินาริ (Fushimi Inari Taisha)',
+                                nameEN: 'Fushimi Inari Taisha',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'ศาลเจ้าจิ้งจอกแห่งเทพอินาริที่มีชื่อเสียงระดับโลกจากเสาโทริอิสีแดงส้มเรียงรายต่อกันกว่า 10,000 ต้น ทอดยาวขึ้นไปตามลาดเขาสร้างความตื่นตาตื่นใจตลอดเส้นทางเดิน',
+                                hours: 'เปิดตลอด 24 ชั่วโมง',
+                                fee: 'เข้าชมฟรี',
+                                access: 'สถานี **JR Inari Station** (JR Nara Line) ประตูศาลเจ้าตั้งอยู่ตรงข้ามสถานีทันที',
+                                bestTime: 'ช่วงเช้าตรู่ 06:30 - 08:00 น. หรือช่วงค่ำที่เสาโทริอิเปิดไฟสว่างไสว'
+                            },
+                            {
+                                id: 'kiyomizu-dera',
+                                nameTH: 'วัดคิโยมิซุ / วัดน้ำใส (Kiyomizu-dera Temple)',
+                                nameEN: 'Kiyomizu-dera Temple',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'วัดมรดกโลกชื่อดังสร้างขึ้นในปี ค.ศ. 778 โดดเด่นด้วยอาคารระเบียงไม้โบราณยักษ์ที่สร้างโดยไม่ใช้ตะปูสักดอก ยื่นออกรับทัศนียภาพของเมืองเกียวโต และสายน้ำศักดิ์สิทธิ์โอโตวะ 3 สาย',
+                                hours: '06:00 - 18:00 น. (ช่วงไลท์อัพฤดูซากุระ/ใบไม้เปลี่ยนสีเปิดถึง 21:30 น.)',
+                                fee: 'ผู้ใหญ่ 400 เยน',
+                                access: 'นั่งรถบัส Kyoto City Bus สาย 206 ลงป้าย **Gojozaka** แล้วเดินขึ้นเนินผ่านถนนโบราณ 10 นาที',
+                                bestTime: 'ช่วงเช้าตรู่ 06:00 - 07:30 น. เพื่อสัมผัสความเงียบสงบศักดิ์สิทธิ์'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'sapporo',
+                nameTH: 'ซัปโปโร',
+                nameEN: 'Sapporo',
+                nameJP: '札幌',
+                region: 'Hokkaido',
+                regionTH: 'ฮอกไกโด',
+                image: 'https://images.unsplash.com/photo-1548678219-98032e55914c?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองศูนย์กลางเกาะฮอกไกโด เด่นเรื่องเทศกาลหิมะ เบียร์สด อาหารทะเลสดใหม่ และมิโซะราเมง',
+                weather: { temp: 11, cond: 'หนาวเย็น/ลมพัด', icon: 'wind' },
+                icCardTip: 'ใช้บัตร SAPICA หรือ Kitaca (หรือ Suica/ICOCA)',
+                districts: [
+                    {
+                        id: 'odori-susukino',
+                        nameTH: 'โอโดริ & สึสึคิโนะ',
+                        nameEN: 'Odori & Susukino',
+                        transportSummary: 'นั่งรถไฟใต้ดิน Sapporo Subway Line ลงสถานี **Odori Station** หรือ **Susukino Station**',
+                        food: ['ซัปโปโรมิโซะราเมงใส่เนยและข้าวโพด', 'ซุปแกงกะหรี่ Soup Curry', 'เนื้อแกะย่างเจงกิสข่าน'],
+                        tags: ['เทศกาลหิมะ', 'หอคอย', 'ตรอกราเมง', 'แสงสี'],
+                        attractions: [
+                            {
+                                id: 'odori-park',
+                                nameTH: 'สวนสาธารณะโอโดริ (Odori Park)',
+                                nameEN: 'Odori Park',
+                                image: 'https://images.unsplash.com/photo-1548678219-98032e55914c?auto=format&fit=crop&w=600&q=80',
+                                description: 'สวนสาธารณะผืนยาวผ่าใจกลางเมืองซัปโปโร 1.5 กิโลเมตร เป็นสถานที่จัดงานเทศกาลหิมะซัปโปโร (Sapporo Snow Festival) ระดับโลก และหอคอย Sapporo TV Tower',
+                                hours: 'เปิดตลอด 24 ชั่วโมง (หอคอย TV Tower เปิด 09:00 - 22:00 น.)',
+                                fee: 'เข้าสวนฟรี (ขึ้นหอคอย TV Tower ประมาณ 1,000 เยน)',
+                                access: 'เชื่อมต่อโดยตรงจากสถานีรถไฟใต้ดิน **Odori Station**',
+                                bestTime: 'เดือนกุมภาพันธ์สำหรับงานเทศกาลหิมะ หรือฤดูร้อนสำหรับชมสวนดอกไม้สดใส'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'fukuoka',
+                nameTH: 'ฟุกุโอกะ',
+                nameEN: 'Fukuoka',
+                nameJP: '福岡',
+                region: 'Kyushu',
+                regionTH: 'คิวชู',
+                image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองใหญ่แห่งเกาะคิวชู บรรยากาศสบายๆ ขึ้นชื่อเรื่องฮากาตะราเมงน้ำซุปกระดูกหมู และร้านแผงลอย Yatai',
+                weather: { temp: 21, cond: 'แจ่มใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร SUGOCA หรือ nimoca (ใช้ Suica/ICOCA สลับแทนได้)',
+                districts: [
+                    {
+                        id: 'hakata-nakasu',
+                        nameTH: 'ฮากาตะ & นากาสึ',
+                        nameEN: 'Hakata & Nakasu',
+                        transportSummary: 'นั่งรถไฟใต้ดิน Fukuoka City Subway ลงสถานี **Hakata Station** หรือ **Nakasu-Kawabata Station**',
+                        food: ['ฮากาตะทงคตสึราเมง เส้นเล็ก', 'หม้อไฟไส้วัว Motsunabe', 'โอเด้งและยากิโทริแผงลอย Yatai'],
+                        tags: ['แผงลอยริมน้ำ', 'สตรีทฟู้ด', 'ศูนย์กลางเดินทาง', 'ช้อปปิ้ง'],
+                        attractions: [
+                            {
+                                id: 'nakasu-yatai',
+                                nameTH: 'ร้านแผงลอยริมน้ำ นากาสึ (Nakasu Yatai Stalls)',
+                                nameEN: 'Nakasu Yatai',
+                                image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=80',
+                                description: 'เอกลักษณ์ทางวัฒนธรรมอาหารริมทางของฟุกุโอกะ ร้านแผงลอยขนาดเล็กตั้งเรียงรายริมแม่น้ำนากาสึ บริการอาหารร้อนๆ ราเมง ยากิโทริ เหล้าสาเก และเบียร์สด',
+                                hours: 'ประมาณ 18:00 - 02:00 น. (หยุดตามสภาพอากาศ)',
+                                fee: 'เข้าชมฟรี (จ่ายค่าอาหารตามจริง)',
+                                access: 'เดิน 7 นาที จากสถานี **Nakasu-Kawabata Station** หรือเดิน 10 นาที จากสถานี Hakata',
+                                bestTime: 'ช่วงเวลา 19:30 - 22:00 น. สัมผัสบรรยากาศการพูดคุยอย่างเป็นกันเอง'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'nagoya',
+                nameTH: 'นาโกย่า',
+                nameEN: 'Nagoya',
+                nameJP: '名古屋',
+                region: 'Chubu',
+                regionTH: 'จูบุ',
+                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองอุตสาหกรรมและประวัติศาสตร์ โดดเด่นด้วยปราสาทนาโกย่า และเมนูอาหารนาโกย่าเมชิรสเข้มข้น',
+                weather: { temp: 19, cond: 'แจ่มใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร manaca หรือตั๋ววันเดียว Subway 1-Day Pass',
+                districts: [
+                    {
+                        id: 'sakae-castle',
+                        nameTH: 'ซาคาเอะ & ปราสาทนาโกย่า',
+                        nameEN: 'Sakae & Nagoya Castle',
+                        transportSummary: 'นั่งรถไฟใต้ดิน Nagoya Subway (Meijo Line) ลงสถานี **Nagoyajo Station** หรือ **Sakae Station**',
+                        food: ['ข้าวหน้าปลาไหลย่าง Hitsumabushi', 'ปีกไก่ทอดรสเผ็ด Tebasaki', 'มิโซะคัตสึ'],
+                        tags: ['ปราสาท', 'สถาปัตยกรรม', 'ช้อปปิ้ง', 'ปีกไก่ทอด'],
+                        attractions: [
+                            {
+                                id: 'nagoya-castle',
+                                nameTH: 'ปราสาทนาโกย่า (Nagoya Castle)',
+                                nameEN: 'Nagoya Castle',
+                                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                                description: 'ปราสาทประวัติศาสตร์สร้างขึ้นในปี ค.ศ. 1612 โดยโชกุนโตกุกาวะ อิเอยาซุ โดดเด่นด้วยรูปสลักปลาหัวเสือทองคำ (Kinshachi) บนยอดหอคอย และพระราชวัง Honmaru Goten ที่บูรณะประณีตด้วยไม้ฮิโนกิ',
+                                hours: '09:00 - 16:30 น.',
+                                fee: 'ผู้ใหญ่ 500 เยน',
+                                access: 'เดิน 5 นาที จากสถานีรถไฟใต้ดิน **Nagoyajo Station** (Meijo Line Exit 7)',
+                                bestTime: 'ช่วงฤดูใบไม้ผลิซากุระบานล้อมรอบกำแพงหินและคูเมืองปราสาท'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'hiroshima',
+                nameTH: 'ฮิโรชิม่า',
+                nameEN: 'Hiroshima',
+                nameJP: '広島',
+                region: 'Chugoku',
+                regionTH: 'จูโกกุ',
+                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองแห่งสันติภาพ โดดเด่นด้วยอนุสรณ์สันติภาพฮิโรชิม่า และเกาะมิยาจิมะที่มีเสาโทริอิกลางน้ำ',
+                weather: { temp: 20, cond: 'ท้องฟ้าโปร่ง', icon: 'sun' },
+                icCardTip: 'ใช้บัตร PASPY หรือใช้ตั๋ว Hiroden Streetcar Pass 1 วัน',
+                districts: [
+                    {
+                        id: 'miyajima-island',
+                        nameTH: 'เกาะมิยาจิมะ (Miyajima)',
+                        nameEN: 'Miyajima Island',
+                        transportSummary: 'นั่งรถไฟ JR Sanyo Line จาก Hiroshima ไปลงสถานี **Miyajimaguchi Station** แล้วต่อเรือเฟอร์รี่ JR Ferry 10 นาที',
+                        food: ['หอยนางรมย่างสดตัวโต', 'ขนมคากิมิจิรูปใบเมเปิ้ลทอด Momiji Manju'],
+                        tags: ['เสากลางน้ำ', 'มรดกโลก', 'หอยนางรม', 'กวางน่ารัก'],
+                        attractions: [
+                            {
+                                id: 'itsukushima-shrine',
+                                nameTH: 'ศาลเจ้าอิสึคุชิมะ & เสาโทริอิกลางน้ำ (Itsukushima Shrine)',
+                                nameEN: 'Itsukushima Shrine',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'ศาลเจ้ามรดกโลก UNESCO ที่สร้างยื่นออกไปในทะเลอย่างงดงาม โดดเด่นด้วยเสาโทริอิสีแดงส้มยักษ์ความสูง 16.6 เมตร ถือเป็น 1 ใน 3 ทัศนียภาพที่สวยงามที่สุดของญี่ปุ่น (Nihon Sankei)',
+                                hours: '06:30 - 18:00 น.',
+                                fee: 'ผู้ใหญ่ 300 เยน',
+                                access: 'เดิน 10 นาที จากท่าเรือเฟอร์รี่ **Miyajima Ferry Terminal**',
+                                bestTime: 'เช็กตารางน้ำขึ้น-น้ำลง ช่วงน้ำขึ้นศาลเจ้าดูลอยน้ำ ช่วงน้ำลงสามารถเดินเท้าไปสัมผัสเสาโทริอิได้อย่างใกล้ชิด'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'okinawa',
+                nameTH: 'โอกินาว่า',
+                nameEN: 'Okinawa',
+                nameJP: '沖縄',
+                region: 'Okinawa',
+                regionTH: 'โอกินาว่า',
+                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                description: 'หมู่เกาะทางใต้ บรรยากาศชายหาดเขตร้อน หาดทรายขาว ทะเลสีฟ้าคราม และวัฒนธรรมริวกิวอันมีเอกลักษณ์',
+                weather: { temp: 26, cond: 'อบอุ่น/แดดจัด', icon: 'sun' },
+                icCardTip: 'ใช้บัตร OKICA บนรถไฟโมโนเรล Yui Rail หรือบริการเช่ารถยนต์ขับเที่ยว',
+                districts: [
+                    {
+                        id: 'naha-churaumi',
+                        nameTH: 'นาฮะ & พิกัดเหนือ',
+                        nameEN: 'Naha & Motobu',
+                        transportSummary: 'นั่งรถไฟโมโนเรล Yui Rail ในเมืองนาฮะ หรือเช่ารถยนต์ขับขึ้นเหนือทางหลวง Okinawa Expressway',
+                        food: ['หมูสามชั้นต้มราฟุเต้ Rafute', 'โอกินาว่าโซบะ', 'ไอศกรีม Blue Seal'],
+                        tags: ['ฉลามวาฬ', 'พิพิธภัณฑ์สัตว์น้ำ', 'ทะเล', 'ถนนคนเดิน'],
+                        attractions: [
+                            {
+                                id: 'churaumi-aquarium',
+                                nameTH: 'พิพิธภัณฑ์สัตว์น้ำโอกินาว่า จูราอุมิ (Okinawa Churaumi Aquarium)',
+                                nameEN: 'Okinawa Churaumi Aquarium',
+                                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=600&q=80',
+                                description: 'พิพิธภัณฑ์สัตว์น้ำระดับโลก โดดเด่นด้วยตู้เลี้ยงปลาอะคริลิกขนาดยักษ์ "ทะเลคุโรชิโอ" (Kuroshio Sea) บรรจุฉลามวาฬตัวจริงยักษ์ใหญ่ และปลากระเบนแมนต้าแหวกว่ายอย่างน่าอัศจรรย์',
+                                hours: '08:30 - 18:30 น. (ช่วงฤดูร้อนเปิดถึง 20:00 น.)',
+                                fee: 'ผู้ใหญ่ประมาณ 2,180 เยน',
+                                access: 'ขับรถยนต์ประมาณ 2 ชั่วโมง จากเมืองนาฮะ หรือนั่ง Express Bus จาก Naha Bus Terminal (2.5 ชม.)',
+                                bestTime: 'เวลา 15:00 น. และ 17:00 น. ชมรอบให้อาหารฉลามวาฬในท่ายืนกินอาหารสุดตื่นตา'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'nara',
+                nameTH: 'นารา',
+                nameEN: 'Nara',
+                nameJP: '奈良',
+                region: 'Kansai',
+                regionTH: 'คันไซ',
+                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองหลวงโบราณแห่งแรก ขึ้นชื่อเรื่องฝูงกวางเป็นมิตรหลุดเดินทั่วสวน และวัดโทไดจิองค์พระใหญ่',
+                weather: { temp: 18, cond: 'แจ่มใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร ICOCA หรือ Kintetsu Rail Pass',
+                districts: [
+                    {
+                        id: 'nara-park-area',
+                        nameTH: 'สวนนารา & วัดโทไดจิ',
+                        nameEN: 'Nara Park Area',
+                        transportSummary: 'นั่งรถไฟ Kintetsu Nara Line ลงสถานี **Kintetsu-Nara Station** ออกแล้วเดิน 5-10 นาทีเข้าสวน',
+                        food: ['ข้าวห่อใบพลับ Kaki no Ha Zushi', 'ขนมเซมเบ้กวาง', 'ชาบูเนื้อวัวนารา'],
+                        tags: ['ให้อาหารกวาง', 'หลวงพ่อโต', 'มรดกโลก', 'วัดโบราณ'],
+                        attractions: [
+                            {
+                                id: 'todaiji-temple',
+                                nameTH: 'วัดโทไดจิ & หลวงพ่อโต (Todaiji Temple & Daibutsu)',
+                                nameEN: 'Todaiji Temple',
+                                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=600&q=80',
+                                description: 'หนึ่งในอาคารไม้ที่ใหญ่ที่สุดในโลก เป็นที่ประดิษฐานองค์พระพุทธรูปไดบุตสึ (Daibutsu) พระสัมมาสัมพุทธเจ้าทองสัมฤทธิ์ความสูง 15 เมตร พร้อมฝูงกวางนารากว่า 1,200 ตัวที่เดินอิสระในบริเวณสวน',
+                                hours: '07:30 - 17:30 น.',
+                                fee: 'ผู้ใหญ่ 600 เยน',
+                                access: 'เดิน 15 นาที จากสถานี **Kintetsu-Nara Station** หรือนั่งรถบัสประจำทางลงป้าย **Todaiji Daibutsuden**',
+                                bestTime: 'ช่วงสายซื้อขนมเซมเบ้กวาง (200 เยน) ถ่ายรูปป้อนอาหารกวางอย่างใกล้ชิด'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'kanazawa',
+                nameTH: 'คานาซาวะ',
+                nameEN: 'Kanazawa',
+                nameJP: '金沢',
+                region: 'Hokuriku',
+                regionTH: 'โฮคุริคุ',
+                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                description: 'เสน่ห์แห่งย่านซามูไรและเกอิชาดั้งเดิม สวนญี่ปุ่นติดอันดับ 1 ใน 3 และงานหัตถกรรมทองคำเปลว',
+                weather: { temp: 16, cond: 'เมฆมาก', icon: 'cloud' },
+                icCardTip: 'ใช้ตั๋ว Kanazawa Loop Bus Pass 1 วัน',
+                districts: [
+                    {
+                        id: 'kenrokuen-district',
+                        nameTH: 'เค็นโรกุเอ็น & ฮิกาชิชายา',
+                        nameEN: 'Kenrokuen & Higashi Chaya',
+                        transportSummary: 'นั่งรถบัส Kanazawa Loop Bus จากสถานี **JR Kanazawa Station** ไปลงป้าย **Kenrokuen-shita**',
+                        food: ['ไอศกรีมซอฟต์ครีมปิดทองคำเปลวบริสุทธิ์', 'ข้าวหน้าอาหารทะเลสด Omicho Market'],
+                        tags: ['สวนญี่ปุ่น', 'ทองคำเปลว', 'ย่านเกอิชา', 'มรดกวัฒนธรรม'],
+                        attractions: [
+                            {
+                                id: 'kenrokuen-garden',
+                                nameTH: 'สวนเค็นโรกุเอ็น (Kenrokuen Garden)',
+                                nameEN: 'Kenrokuen Garden',
+                                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?auto=format&fit=crop&w=600&q=80',
+                                description: 'สวนญี่ปุ่นที่ติดอันดับ 1 ใน 3 สวนที่สวยที่สุดในประเทศญี่ปุ่น มีความสมบูรณ์แบบครบองค์ประกอบทั้ง 6 ประการ ได้แก่ ความกว้างใหญ่ ความเงียบสงบ ศิลปะ ความเก่าแก่ แหล่งน้ำ และทัศนียภาพ',
+                                hours: '07:00 - 18:00 น. (ขึ้นอยู่กับฤดูกาล)',
+                                fee: 'ผู้ใหญ่ 320 เยน',
+                                access: 'ลงป้ายรถบัส **Kenrokuen-shita** เดินต่อ 2 นาทีเข้าประตูสวน',
+                                bestTime: 'ฤดูหนาวชมเชือกสลิงมัดต้นสน (Yukitsuri) ป้องกันหิมะตกหนัก'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'sendai',
+                nameTH: 'เซนได',
+                nameEN: 'Sendai',
+                nameJP: '仙台',
+                region: 'Tohoku',
+                regionTH: 'โทโฮคุ',
+                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองแห่งความเขียวขจี ศูนย์กลางภูมิภาคโทโฮคุ มีชื่อเสียงเรื่องลิ้นวัวย่างและประวัติศาสตร์ซามูไรซาเตะ มาซามุเนะ',
+                weather: { temp: 15, cond: 'สดใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร icsca หรือ JR East Pass (Tohoku Area)',
+                districts: [
+                    {
+                        id: 'sendai-castle-district',
+                        nameTH: 'ซากปราสาทเซนได',
+                        nameEN: 'Sendai Castle Site',
+                        transportSummary: 'นั่งรถบัสท่องเที่ยว Loople Sendai Bus จากสถานี **Sendai Station** ลงป้าย **Sendai Castle Site**',
+                        food: ['ลิ้นวัวย่างถ่านจานเด็ด Gyutan', 'ขนมซุนดะโมจิ Zunda Mochi'],
+                        tags: ['ซามูไร', 'ลิ้นวัวย่าง', 'จุดชมวิว'],
+                        attractions: [
+                            {
+                                id: 'sendai-castle-statue',
+                                nameTH: 'รูปปั้นซามูไรตาเดียว ดาเตะ มาซามุเนะ',
+                                nameEN: 'Sendai Castle Site & Masamune Statue',
+                                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+                                description: 'จุดชมวิวบนยอดเขาบริเวณซากปราสาทเซนได ประดิษฐานรูปปั้นทองสัมฤทธิ์ของท่านซามูไรตาเดียว "ดาเตะ มาซามุเนะ" ขี่ม้าตระหง่านมองลงมายังทัศนียภาพของเมืองเซนไดแบบพาโนรามา',
+                                hours: 'เปิดตลอด 24 ชั่วโมง (นิทรรศการปิด 17:00 น.)',
+                                fee: 'เข้าชมฟรี',
+                                access: 'นั่งรถบัส Loople Sendai Bus ลงป้าย **Sendai Castle Site (Sendaijoji-ato)**',
+                                bestTime: 'ช่วงบ่ายเพื่อถ่ายรูปรูปปั้นซามูไรกับแสงแดดและวิวเมืองเซนได'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'kobe',
+                nameTH: 'โกเบ',
+                nameEN: 'Kobe',
+                nameJP: '神戸',
+                region: 'Kansai',
+                regionTH: 'คันไซ',
+                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองท่าต่างชาติสุดคลาสสิก วิวพอร์ตริมทะเลสุดโรแมนติก และสุดยอดเนื้อวัววากิวโกเบระดับโลก',
+                weather: { temp: 19, cond: 'แจ่มใส', icon: 'sun' },
+                icCardTip: 'ใช้บัตร ICOCA หรือตั๋ว Kobe Loop Bus Pass',
+                districts: [
+                    {
+                        id: 'harborland-kobe',
+                        nameTH: 'ฮาร์เบอร์แลนด์ & ท่าเรือโกเบ',
+                        nameEN: 'Kobe Harborland',
+                        transportSummary: 'นั่งรถไฟ JR Kobe Line ลงสถานี **Kobe Station** หรือ **JR Sannomiya Station**',
+                        food: ['สเต๊กเนื้อวัวโกเบลายหินอ่อนละลายในปาก Kobe Beef', 'พุดดิ้งโกเบ'],
+                        tags: ['เนื้อโกเบ', 'วิวท่าเรือ', 'ช็อปปิ้ง', 'หอคอย'],
+                        attractions: [
+                            {
+                                id: 'kobe-port-tower',
+                                nameTH: 'หอคอยโกเบพอร์ตทาวเวอร์ & ฮาร์เบอร์แลนด์ (Kobe Port Tower)',
+                                nameEN: 'Kobe Port Tower',
+                                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+                                description: 'หอคอยทรงกลองยาวสีแดงสัญลักษณ์ของเมืองท่าโกเบ พร้อมย่านช้อปปิ้งริมทะเล Kobe Harborland umie และชิงช้าสวรรค์วิวทะเลสุดโรแมนติก',
+                                hours: '09:00 - 22:00 น.',
+                                fee: 'ชมวิวรอบนอกฟรี (ขึ้นหอคอยประมาณ 1,000 เยน)',
+                                access: 'เดิน 10 นาที จากสถานี **JR Kobe Station**',
+                                bestTime: 'ช่วงค่ำสำหรับเดินชมบรรยากาศไฟไลท์อัพโรแมนติกริมท่าเรือ'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'takayama',
+                nameTH: 'ทาคาซายามะ',
+                nameEN: 'Takayama',
+                nameJP: '高山',
+                region: 'Chubu',
+                regionTH: 'จูบุ',
+                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองเก่าแก่อ้อมกอดเทือกเขาอัลป์ญี่ปุ่น ย่านเมืองเก่าซันมาชิซูจิ และเนื้อฮิดะรสเลิศ',
+                weather: { temp: 14, cond: 'อากาศเย็นสบาย', icon: 'thermometer-snowflake' },
+                icCardTip: 'แนะนำใช้ตั๋วรถบัส Nohi Bus เดินทางจากนาโกย่าหรือคานาซาวะ',
+                districts: [
+                    {
+                        id: 'sanmachi-district',
+                        nameTH: 'เมืองเก่าซันมาชิ ซูจิ',
+                        nameEN: 'Sanmachi Suji',
+                        transportSummary: 'เดินจากสถานีรถไฟ **JR Takayama Station** เพียง 10 นาทีเข้าสู่ย่านเมืองเก่า',
+                        food: ['ซูชิเนื้อวัวฮิดะ Hida Beef Sushi', 'เนื้อฮิดะย่างซอสมิโซะบนใบโฮบะ'],
+                        tags: ['เมืองโบราณ', 'เนื้อฮิดะ', 'โรงสาเก'],
+                        attractions: [
+                            {
+                                id: 'sanmachi-old-town',
+                                nameTH: 'ถนนคนเดินเมืองเก่าซันมาชิ ซูจิ',
+                                nameEN: 'Sanmachi Suji Old Town',
+                                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
+                                description: 'อนุรักษ์อาคารบ้านเรือนไม้สีเข้มตั้งแต่สมัยเอโดะ เต็มไปด้วยโรงบ่มสาเกโบราณที่แขวนลูกบอลสุกิยามะหน้าประตู ร้านขายของที่ระลึก และร้านซูชิเนื้อฮิดะ',
+                                hours: 'ประมาณ 09:00 - 17:00 น.',
+                                fee: 'เข้าชมฟรี',
+                                access: 'เดิน 10 นาที จากสถานี **JR Takayama Station**',
+                                bestTime: 'ช่วงเช้าลิ้มลองซูชิเนื้อฮิดะเสิร์ฟบนข้าวเกรียบกรอบ'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'hakodate',
+                nameTH: 'ฮาโกดาเตะ',
+                nameEN: 'Hakodate',
+                nameJP: '函館',
+                region: 'Hokkaido',
+                regionTH: 'ฮอกไกโด',
+                image: 'https://images.unsplash.com/photo-1548678219-98032e55914c?auto=format&fit=crop&w=600&q=80',
+                description: 'เมืองท่าโรแมนติกทางตอนใต้ของฮอกไกโด จุดชมวิวยอดเขาติด 1 ใน 3 จุดชมวิวค่ำคืนสวยที่สุดในโลก',
+                weather: { temp: 12, cond: 'หมอก/ลมเย็น', icon: 'cloud-fog' },
+                icCardTip: 'ใช้ตั๋วรถราง Hakodate Tram 1-Day Pass',
+                districts: [
+                    {
+                        id: 'hakodate-mt-area',
+                        nameTH: 'ยอดเขาฮาโกดาเตะ & ป้อมกอรอยาคุ',
+                        nameEN: 'Mt. Hakodate & Goryokaku',
+                        transportSummary: 'นั่งรถราง Hakodate Tram ไปลงป้าย **Jujigai** แล้วต่อกระเช้า Hakodate Ropeway',
+                        food: ['เบอร์เกอร์ไก่ Lucky Pierrot', 'ข้าวหน้าไข่ปูไข่กุ้งตลาดเช้า'],
+                        tags: ['วิวค่ำคืน', 'ป้อมรูปดาว', 'กระเช้า'],
+                        attractions: [
+                            {
+                                id: 'mt-hakodate-night',
+                                nameTH: 'จุดชมวิวยอดเขาฮาโกดาเตะ (Mount Hakodate)',
+                                nameEN: 'Mount Hakodate Night View',
+                                image: 'https://images.unsplash.com/photo-1548678219-98032e55914c?auto=format&fit=crop&w=600&q=80',
+                                description: '1 ใน 3 ทัศนียภาพยามค่ำคืนที่สวยที่สุดในโลก วิวส่วนคอดของแหลมที่โอบล้อมด้วยทะเลสองฝั่งพร้อมแสงไฟค่ำคืนระยิบระยับดั่งเพชรเม็ดงาม',
+                                hours: 'กระเช้าเปิด 10:00 - 22:00 น.',
+                                fee: 'ค่ากระเช้าไป-กลับ ผู้ใหญ่ 1,800 เยน',
+                                access: 'นั่งรถรางลงป้าย **Jujigai** เดินขึ้นเนิน 10 นาที ไปยังสถานีกระเช้า Hakodate Ropeway',
+                                bestTime: 'ช่วงเวลา 30 นาทีก่อนพระอาทิตย์ตกดินเพื่อชมการเปลี่ยนผ่านของท้องฟ้าสู่แสงไฟเมือง'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // --- APP STATE ---
+        let currentSelectedCityId = 'tokyo';
+        let currentSelectedDistrictId = 'shibuya';
+        let currentSelectedAttractionId = 'shibuya-sky';
+        let currentRegionFilter = 'ALL';
+        let searchQuery = '';
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initLucideIcons();
+            startJSTClock();
+            createSakuraPetals();
+            renderRegionFilters();
+            renderCityGrid();
+            selectCity('tokyo', false);
+            setupSearchListener();
+        });
+
+        function initLucideIcons() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // --- REAL-TIME JST CLOCK & WEATHER SIMULATION ---
+        function startJSTClock() {
+            function updateClock() {
+                const now = new Date();
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const jstDate = new Date(utc + (3600000 * 9));
+                
+                const hours = String(jstDate.getHours()).padStart(2, '0');
+                const minutes = String(jstDate.getMinutes()).padStart(2, '0');
+                const seconds = String(jstDate.getSeconds()).padStart(2, '0');
+                
+                const timeString = `${hours}:${minutes}:${seconds}`;
+                
+                const elDesktop = document.getElementById('jst-clock');
+                const elMobile = document.getElementById('mobile-jst-clock');
+                
+                if (elDesktop) elDesktop.textContent = timeString;
+                if (elMobile) elMobile.textContent = timeString;
+            }
+
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        // --- REGION FILTERS RENDER ---
+        const regionsList = [
+            { id: 'ALL', nameTH: 'ทั้งหมด' },
+            { id: 'Kanto', nameTH: 'คันโต' },
+            { id: 'Kansai', nameTH: 'คันไซ' },
+            { id: 'Hokkaido', nameTH: 'ฮอกไกโด' },
+            { id: 'Kyushu', nameTH: 'คิวชู' },
+            { id: 'Chubu', nameTH: 'จูบุ' },
+            { id: 'Chugoku', nameTH: 'จูโกกุ' },
+            { id: 'Hokuriku', nameTH: 'โฮคุริคุ' },
+            { id: 'Tohoku', nameTH: 'โทโฮคุ' },
+            { id: 'Okinawa', nameTH: 'โอกินาว่า' }
+        ];
+
+        function renderRegionFilters() {
+            const container = document.getElementById('region-filter-container');
+            if (!container) return;
+
+            container.innerHTML = regionsList.map(r => {
+                const isActive = currentRegionFilter === r.id;
+                const activeClass = isActive 
+                    ? 'bg-japan-indigo text-white font-medium shadow-sm' 
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200';
+                return `
+                    <button onclick="setRegionFilter('${r.id}')" 
+                        class="px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap ${activeClass}">
+                        ${r.nameTH}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setRegionFilter(regionId) {
+            currentRegionFilter = regionId;
+            renderRegionFilters();
+            renderCityGrid();
+        }
+
+        // --- SEARCH INPUT & ATTRACTION MATCHING ---
+        function setupSearchListener() {
+            const searchInput = document.getElementById('city-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.trim().toLowerCase();
+                    
+                    if (searchQuery.length > 1) {
+                        // Search deep into cities, districts, and attractions
+                        for (const city of japanData) {
+                            for (const dist of city.districts) {
+                                for (const attr of dist.attractions) {
+                                    if (attr.nameTH.toLowerCase().includes(searchQuery) || 
+                                        attr.nameEN.toLowerCase().includes(searchQuery)) {
+                                        currentSelectedCityId = city.id;
+                                        currentSelectedDistrictId = dist.id;
+                                        currentSelectedAttractionId = attr.id;
+                                        selectCity(city.id, false);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    renderCityGrid();
+                });
+            }
+        }
+
+        // --- CITY CARDS GRID RENDER ---
+        function renderCityGrid() {
+            const grid = document.getElementById('city-grid');
+            if (!grid) return;
+
+            const filteredCities = japanData.filter(city => {
+                const matchesRegion = (currentRegionFilter === 'ALL') || (city.region === currentRegionFilter);
+                
+                let matchesSearch = !searchQuery || 
+                    city.nameTH.toLowerCase().includes(searchQuery) ||
+                    city.nameEN.toLowerCase().includes(searchQuery) ||
+                    city.regionTH.toLowerCase().includes(searchQuery);
+
+                if (!matchesSearch && searchQuery) {
+                    matchesSearch = city.districts.some(d => 
+                        d.nameTH.toLowerCase().includes(searchQuery) ||
+                        d.nameEN.toLowerCase().includes(searchQuery) ||
+                        d.attractions.some(a => a.nameTH.toLowerCase().includes(searchQuery) || a.nameEN.toLowerCase().includes(searchQuery))
+                    );
+                }
+
+                return matchesRegion && matchesSearch;
+            });
+
+            const countLabel = document.getElementById('city-count-label');
+            if (countLabel) countLabel.textContent = filteredCities.length;
+
+            if (filteredCities.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full p-8 text-center bg-white rounded-xl border border-dashed border-slate-300 text-slate-500 space-y-2">
+                        <i data-lucide="map-pin-off" class="w-8 h-8 mx-auto text-slate-400"></i>
+                        <p class="text-sm font-medium">ไม่พบเมืองหรือสถานที่ที่ตรงกับคำค้นหาของคุณ</p>
+                        <p class="text-xs text-slate-400">ลองพิมพ์ชื่อสถานที่ เช่น SHIBUYA SKY, วัดเซ็นโซจิ หรือ USJ</p>
+                    </div>
+                `;
+                initLucideIcons();
+                return;
+            }
+
+            grid.innerHTML = filteredCities.map(city => {
+                const isSelected = city.id === currentSelectedCityId;
+                const borderClass = isSelected 
+                    ? 'border-japan-red ring-2 ring-japan-red/20 bg-rose-50/30' 
+                    : 'border-slate-200 hover:border-slate-300 bg-white';
+
+                const totalAttractions = city.districts.reduce((acc, d) => acc + d.attractions.length, 0);
+
+                return `
+                    <div onclick="selectCity('${city.id}', true)" 
+                        class="p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 shadow-sm hover:shadow group ${borderClass}">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative bg-slate-100">
+                                <img src="${city.image}" alt="${city.nameTH}" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/100x100/1B2A4A/FFFFFF?text=${city.nameEN}'">
+                                <span class="absolute top-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded font-medium">
+                                    ${city.regionTH}
+                                </span>
+                            </div>
+
+                            <div class="truncate">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="font-bold text-sm text-slate-900 group-hover:text-japan-red transition truncate">
+                                        ${city.nameTH}
+                                    </h4>
+                                    <span class="text-xs text-slate-400 font-normal">(${city.nameEN})</span>
+                                </div>
+                                <p class="text-xs text-slate-500 truncate mt-0.5">${city.districts.length} ย่าน • ${totalAttractions} สถานที่แนะนำ</p>
+                                <div class="flex items-center gap-2 mt-1 text-[11px] text-slate-600">
+                                    <span class="inline-flex items-center text-amber-600 font-medium gap-0.5">
+                                        <i data-lucide="thermometer" class="w-3 h-3"></i> ${city.weather.temp}°C
+                                    </span>
+                                    <span class="text-slate-400">• ${city.weather.cond}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="shrink-0 text-slate-300 group-hover:text-japan-red transition">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            initLucideIcons();
+        }
+
+        // --- SELECT CITY ---
+        function selectCity(cityId, scrollOnMobile = true) {
+            currentSelectedCityId = cityId;
+            const city = japanData.find(c => c.id === cityId);
+            if (!city) return;
+
+            if (city.districts && city.districts.length > 0) {
+                const currentDistExists = city.districts.some(d => d.id === currentSelectedDistrictId);
+                if (!currentDistExists) {
+                    currentSelectedDistrictId = city.districts[0].id;
+                }
+                const currentDist = city.districts.find(d => d.id === currentSelectedDistrictId);
+                if (currentDist && currentDist.attractions.length > 0) {
+                    currentSelectedAttractionId = currentDist.attractions[0].id;
+                }
+            }
+
+            renderCityGrid();
+
+            // Header Weather
+            const headerCityEl = document.getElementById('header-weather-city');
+            const headerTempEl = document.getElementById('header-weather-temp');
+            if (headerCityEl) headerCityEl.textContent = `สภาพอากาศ (${city.nameTH})`;
+            if (headerTempEl) {
+                headerTempEl.innerHTML = `${city.weather.temp}°C <span class="text-xs font-normal text-slate-300">${city.weather.cond}</span>`;
+            }
+
+            // City Banner Header
+            const bannerBg = document.getElementById('city-banner-bg');
+            if (bannerBg) bannerBg.style.backgroundImage = `url('${city.image}')`;
+
+            const regionBadge = document.getElementById('city-region-badge');
+            if (regionBadge) regionBadge.textContent = `${city.regionTH} (${city.region})`;
+
+            const jpName = document.getElementById('city-jp-name');
+            if (jpName) jpName.textContent = `${city.nameJP} (${city.nameEN})`;
+
+            const cityTitle = document.getElementById('city-title');
+            if (cityTitle) cityTitle.textContent = `${city.nameTH} (${city.nameEN})`;
+
+            const cityDesc = document.getElementById('city-description');
+            if (cityDesc) cityDesc.textContent = city.description;
+
+            const cityWeatherTemp = document.getElementById('city-weather-temp');
+            if (cityWeatherTemp) cityWeatherTemp.textContent = `${city.weather.temp}°C`;
+
+            const cityWeatherCond = document.getElementById('city-weather-cond');
+            if (cityWeatherCond) cityWeatherCond.textContent = city.weather.cond;
+
+            const icCardTip = document.getElementById('city-ic-card-tip');
+            if (icCardTip) icCardTip.textContent = city.icCardTip;
+
+            renderDistrictTabs(city);
+            renderDistrictAndAttractions(city);
+
+            if (scrollOnMobile && window.innerWidth < 1024) {
+                const detailsSec = document.getElementById('details-section');
+                if (detailsSec) detailsSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // --- RENDER DISTRICT TABS ---
+        function renderDistrictTabs(city) {
+            const tabsContainer = document.getElementById('district-tabs');
+            if (!tabsContainer) return;
+
+            tabsContainer.innerHTML = city.districts.map(dist => {
+                const isSelected = dist.id === currentSelectedDistrictId;
+                const activeStyle = isSelected
+                    ? 'bg-japan-red text-white font-semibold shadow-sm'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100';
+
+                return `
+                    <button onclick="selectDistrict('${dist.id}')"
+                        class="px-3.5 py-1.5 rounded-xl text-xs transition flex items-center gap-1.5 ${activeStyle}">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                        <span>${dist.nameTH}</span>
+                        <span class="opacity-75 text-[10px]">(${dist.nameEN})</span>
+                    </button>
+                `;
+            }).join('');
+
+            initLucideIcons();
+        }
+
+        function selectDistrict(districtId) {
+            currentSelectedDistrictId = districtId;
+            const city = japanData.find(c => c.id === currentSelectedCityId);
+            if (city) {
+                const dist = city.districts.find(d => d.id === districtId);
+                if (dist && dist.attractions.length > 0) {
+                    currentSelectedAttractionId = dist.attractions[0].id;
+                }
+                renderDistrictTabs(city);
+                renderDistrictAndAttractions(city);
+            }
+        }
+
+        function selectAttraction(attractionId) {
+            currentSelectedAttractionId = attractionId;
+            const city = japanData.find(c => c.id === currentSelectedCityId);
+            if (city) {
+                renderDistrictAndAttractions(city);
+            }
+        }
+
+        // --- RENDER DISTRICT & INTERACTIVE ATTRACTION DETAILS ---
+        function renderDistrictAndAttractions(city) {
+            const container = document.getElementById('district-detail-card');
+            if (!container) return;
+
+            const dist = city.districts.find(d => d.id === currentSelectedDistrictId) || city.districts[0];
+            if (!dist) return;
+
+            const selectedAttraction = dist.attractions.find(a => a.id === currentSelectedAttractionId) || dist.attractions[0];
+
+            container.innerHTML = `
+                <!-- District Title Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+                    <div>
+                        <div class="text-xs text-japan-red font-semibold uppercase tracking-wider">ย่านท่องเที่ยวใน${city.nameTH}</div>
+                        <h4 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            ${dist.nameTH} <span class="text-sm text-slate-400 font-normal">(${dist.nameEN})</span>
+                        </h4>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${dist.tags.map(tag => `
+                            <span class="bg-rose-50 text-japan-red border border-rose-100 text-[11px] px-2.5 py-0.5 rounded-full font-medium">
+                                #${tag}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- District Summary Transport & Food -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl space-y-1">
+                        <div class="font-bold text-japan-indigo flex items-center gap-1.5">
+                            <i data-lucide="subway" class="w-3.5 h-3.5 text-japan-red"></i> การเดินทางมายังย่านนี้
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">${formatMarkdownTransport(dist.transportSummary)}</p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-xl space-y-1">
+                        <div class="font-bold text-amber-900 flex items-center gap-1.5">
+                            <i data-lucide="utensils" class="w-3.5 h-3.5 text-amber-600"></i> อาหารเด็ดห้ามพลาด
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">${dist.food.join(' • ')}</p>
+                    </div>
+                </div>
+
+                <!-- INTERACTIVE RECOMMENDED ATTRACTIONS SECTION -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between">
+                        <h5 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="compass" class="w-4 h-4 text-japan-red"></i>
+                            สถานที่ท่องเที่ยวแนะนำในย่าน ${dist.nameTH} (${dist.attractions.length})
+                        </h5>
+                        <span class="text-xs text-slate-400 font-normal">คลิกเลือกสถานที่เพื่อดูคำบรรยายและวิธีเดินทาง</span>
+                    </div>
+
+                    <!-- Attraction Cards Pill Carousel/Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        ${dist.attractions.map(attr => {
+                            const isAttrSelected = selectedAttraction && attr.id === selectedAttraction.id;
+                            const cardBorder = isAttrSelected
+                                ? 'border-japan-red bg-white ring-2 ring-japan-red/20 shadow-sm'
+                                : 'border-slate-200 bg-white hover:border-slate-300';
+
+                            return `
+                                <div onclick="selectAttraction('${attr.id}')" 
+                                    class="p-2.5 rounded-xl border transition cursor-pointer flex items-center gap-3 ${cardBorder}">
+                                    <img src="${attr.image}" alt="${attr.nameTH}" 
+                                        class="w-12 h-12 rounded-lg object-cover shrink-0"
+                                        onerror="this.onerror=null;this.src='https://placehold.co/100x100/1B2A4A/FFFFFF?text=${attr.nameEN}'">
+                                    <div class="min-w-0 flex-1">
+                                        <h6 class="font-bold text-xs text-slate-900 truncate">${attr.nameTH}</h6>
+                                        <p class="text-[11px] text-slate-500 truncate mt-0.5">${attr.nameEN}</p>
+                                    </div>
+                                    <div class="shrink-0">
+                                        <span class="w-2 h-2 rounded-full block ${isAttrSelected ? 'bg-japan-red' : 'bg-slate-200'}"></span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- SELECTED ATTRACTION DETAILED VIEW PANEL -->
+                    ${selectedAttraction ? `
+                        <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-4 animate-fadeIn">
+                            <!-- Attraction Title Banner -->
+                            <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 pb-3 border-b border-slate-100">
+                                <div>
+                                    <div class="inline-flex items-center gap-1 bg-japan-red/10 text-japan-red px-2 py-0.5 rounded text-[10px] font-semibold mb-1">
+                                        <i data-lucide="star" class="w-3 h-3 fill-japan-red"></i> สถานที่ไฮไลต์
+                                    </div>
+                                    <h5 class="text-lg font-bold text-slate-900">${selectedAttraction.nameTH}</h5>
+                                    <span class="text-xs text-slate-400 font-medium">${selectedAttraction.nameEN}</span>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="space-y-1">
+                                <h6 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                                    <i data-lucide="info" class="w-3.5 h-3.5 text-japan-indigo"></i> คำบรรยายสถานที่
+                                </h6>
+                                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                    ${selectedAttraction.description}
+                                </p>
+                            </div>
+
+                            <!-- Info Grid: Hours, Fees, Best Time -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1">
+                                    <div class="font-bold text-slate-800 flex items-center gap-1">
+                                        <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i> เวลาเปิด-ปิด
+                                    </div>
+                                    <div class="text-slate-600">${selectedAttraction.hours}</div>
+                                </div>
+
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1">
+                                    <div class="font-bold text-slate-800 flex items-center gap-1">
+                                        <i data-lucide="ticket" class="w-3.5 h-3.5 text-emerald-500"></i> ราคาค่าเข้าชม
+                                    </div>
+                                    <div class="text-slate-600">${selectedAttraction.fee}</div>
+                                </div>
+
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1">
+                                    <div class="font-bold text-slate-800 flex items-center gap-1">
+                                        <i data-lucide="sun" class="w-3.5 h-3.5 text-rose-500"></i> ช่วงเวลาแนะนำ
+                                    </div>
+                                    <div class="text-slate-600">${selectedAttraction.bestTime}</div>
+                                </div>
+                            </div>
+
+                            <!-- Specific Transport Instructions -->
+                            <div class="bg-japan-indigo text-white p-3.5 rounded-xl space-y-1 text-xs sm:text-sm">
+                                <div class="font-bold text-japan-pink flex items-center gap-1.5">
+                                    <i data-lucide="footprints" class="w-4 h-4"></i> วิธีการเดินทางมาสถานที่นี้
+                                </div>
+                                <div class="text-slate-200 leading-relaxed font-sans">
+                                    ${formatMarkdownTransport(selectedAttraction.access)}
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            initLucideIcons();
+        }
+
+        // Helper to format **bold** text
+        function formatMarkdownTransport(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-japan-pink font-semibold">$1</strong>');
+        }
+
+        // --- SAKURA PETALS BACKGROUND ANIMATION ---
+        function createSakuraPetals() {
+            const container = document.getElementById('sakura-container');
+            if (!container) return;
+
+            const petalCount = 12;
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                const size = Math.random() * 8 + 8;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size + 4}px`;
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.animationDuration = `${Math.random() * 5 + 7}s`;
+                petal.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(petal);
+            }
+        }
+    </script>
+</body>
+</html>
